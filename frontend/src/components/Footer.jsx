@@ -1,5 +1,5 @@
-import { Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
-
+import { Facebook, Instagram, Linkedin } from "lucide-react";
+import { FaXTwitter } from "react-icons/fa6";
 const Footer = () => {
   return (
     <footer className="bg-[#0d1117] text-white pt-5 ">
@@ -39,7 +39,7 @@ const Footer = () => {
           <div className="flex gap-5 mt-4">
             <a href="#" className="hover:text-[#21c8d4]"><Facebook size={22} /></a>
             <a href="#" className="hover:text-[#21c8d4]"><Instagram size={22} /></a>
-            <a href="#" className="hover:text-[#21c8d4]"><Twitter size={22} /></a>
+            <a href="#" className="hover:text-[#21c8d4]"><FaXTwitter size={22} /></a>
             <a href="#" className="hover:text-[#21c8d4]"><Linkedin size={22} /></a>
           </div>
         </div>
