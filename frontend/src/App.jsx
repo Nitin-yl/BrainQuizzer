@@ -1,6 +1,13 @@
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { SignedIn, SignedOut, RedirectToSignIn } from "@clerk/clerk-react";
-
+import {
+  SignedIn,
+  SignedOut,
+  RedirectToSignIn,
+  useAuth,
+} from "@clerk/clerk-react";
+import { TbLoader3 } from "react-icons/tb";
+import Loader from "./components/Loader";
 import About from "./pages/About";
 import LeaderBoard from "./pages/LeaderBoard";
 import Home from "./pages/Home";
@@ -8,15 +15,30 @@ import Quizzes from "./pages/Quizzes";
 import Contact from "./pages/Contact";
 import MyProfile from "./pages/MyProfile";
 import QuizPage from "./pages/QuizPage";
+import AddPage from "./pages/Addpage";
 
 function App() {
+  const { isLoaded } = useAuth();
+  const [minDelayPassed, setMinDelayPassed] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setMinDelayPassed(true), 400);
+    return () => clearTimeout(t);
+  }, []);
+
+  if (!isLoaded || !minDelayPassed) {
+    return (
+      <div className="bg-[#0d1117] min-h-screen flex items-center justify-center text-white">
+        <TbLoader3 className="animate-spin text-5xl text-cyan-700" />
+      </div>
+    );
+  }
+
   return (
     <BrowserRouter>
       <Routes>
-        {/* Home page - no protection */}
         <Route path="/" element={<Home />} />
 
-        {/* About page - protected */}
         <Route
           path="/about"
           element={
@@ -31,7 +53,6 @@ function App() {
           }
         />
 
-        {/* Leaderboard page - protected */}
         <Route
           path="/leaderboard"
           element={
@@ -46,7 +67,6 @@ function App() {
           }
         />
 
-        {/* Quizzes page - protected */}
         <Route
           path="/quizzes"
           element={
@@ -61,7 +81,6 @@ function App() {
           }
         />
 
-        {/* Quiz page (dynamic) - protected */}
         <Route
           path="/quiz/:id"
           element={
@@ -76,7 +95,6 @@ function App() {
           }
         />
 
-        {/* Contact page - protected */}
         <Route
           path="/contact"
           element={
@@ -91,7 +109,6 @@ function App() {
           }
         />
 
-        {/* My Profile - protected */}
         <Route
           path="/profile"
           element={
@@ -106,7 +123,20 @@ function App() {
           }
         />
 
-        {/* Catch all route */}
+        <Route
+          path="/add"
+          element={
+            <>
+              <SignedIn>
+                <AddPage />
+              </SignedIn>
+              <SignedOut>
+                <RedirectToSignIn />
+              </SignedOut>
+            </>
+          }
+        />
+
         <Route
           path="*"
           element={

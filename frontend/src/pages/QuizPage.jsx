@@ -1,96 +1,110 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useAuth } from "@clerk/clerk-react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-
-// Local fallback questions
-const fallbackQuestions = [
-  {
-    question: "Which hook is used for state in React?",
-    options: ["useEffect", "useState", "useRef", "useReducer"],
-    answer: "useState",
-  },
-  {
-    question: "What does JS === operator check?",
-    options: ["Type only", "Value only", "Value and Type", "None"],
-    answer: "Value and Type",
-  },
-  {
-    question: "Which method adds an element at the end of array?",
-    options: ["push()", "pop()", "shift()", "unshift()"],
-    answer: "push()",
-  },
-];
+import { quizApi } from "../api/api";
+import toast from "react-hot-toast";
 
 const QuizPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { getToken } = useAuth();
 
-  const [questions, setQuestions] = useState([]);
+  const [quiz, setQuiz] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [score, setScore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(60); // seconds per quiz
+  const [answers, setAnswers] = useState([]);
+  const [startTime] = useState(Date.now());
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
 
-  // Fetch questions from API or fallback
   useEffect(() => {
-    const fetchQuestions = async () => {
+    const fetchQuiz = async () => {
       try {
-        const response = await fetch(`https://opentdb.com/api.php?amount=10&type=multiple`);
-        if (!response.ok) throw new Error("API Error");
-        const data = await response.json();
-
-        // Map Open Trivia DB format to our format
-        const formatted = data.results.map((q) => ({
-          question: q.question,
-          options: [...q.incorrect_answers, q.correct_answer].sort(() => Math.random() - 0.5),
-          answer: q.correct_answer,
-        }));
-
-        setQuestions(formatted);
+        setLoading(true);
+        const data = await quizApi.getById(getToken, id);
+        setQuiz(data);
+        setError(null);
       } catch (err) {
-        console.warn("Failed to fetch API, using fallback questions.", err);
-        setQuestions(fallbackQuestions);
-        setError(true);
+        console.error("Failed to fetch quiz:", err);
+        setError("Failed to load quiz. Please try again.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchQuestions();
-  }, [id]);
+    fetchQuiz();
+  }, [id, getToken]);
 
-  // Timer countdown
-  useEffect(() => {
-    if (timeLeft <= 0 || loading) return;
-    const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-    return () => clearTimeout(timer);
-  }, [timeLeft, loading]);
+  const handleAnswer = async (option) => {
+    const updatedAnswers = [
+      ...answers,
+      { questionIndex: currentIndex, selectedAnswer: option },
+    ];
+    setAnswers(updatedAnswers);
 
-  const handleAnswer = (option) => {
-    if (option === questions[currentIndex].answer) setScore(score + 1);
-
-    if (currentIndex < questions.length - 1) {
-      setCurrentIndex(currentIndex + 1);
+    if (currentIndex < quiz.questions.length - 1) {
+      setCurrentIndex((prev) => prev + 1);
     } else {
-      alert(`Quiz Finished! Your score: ${score + 1}/${questions.length}`);
-      navigate("/quizzes");
+      await submitQuiz(updatedAnswers);
     }
   };
 
-  if (loading) return <div className="text-white text-center mt-12">Loading questions...</div>;
-  if (!questions.length) return <div className="text-white text-center mt-12">No questions available.</div>;
+  const submitQuiz = async (finalAnswers) => {
+    try {
+      setSubmitting(true);
+      const timeTaken = Math.floor((Date.now() - startTime) / 1000);
 
-  const currentQuestion = questions[currentIndex];
+      const result = await quizApi.submit(getToken, id, {
+        answers: finalAnswers,
+        timeTaken,
+      });
+
+      toast.success(
+        `Quiz Completed! Score: ${result.score}% (${result.correctCount}/${result.totalQuestions})`
+      );
+      navigate("/quizzes");
+    } catch (err) {
+      console.error("Failed to submit quiz:", err);
+      toast.error("Failed to submit quiz. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (loading)
+    return (
+      <div className="bg-[#0d1117] min-h-screen text-white flex flex-col">
+        <Navbar />
+        <div className="text-center text-xl mt-12">Loading quiz...</div>
+        <Footer />
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="bg-[#0d1117] min-h-screen text-white flex flex-col">
+        <Navbar />
+        <div className="text-center text-red-500 text-xl mt-12">{error}</div>
+        <Footer />
+      </div>
+    );
+
+  if (!quiz) return null;
+
+  const currentQuestion = quiz.questions[currentIndex];
 
   return (
     <div className="bg-[#0d1117] min-h-screen text-white flex flex-col">
       <Navbar />
 
       <div className="flex-1 max-w-3xl mx-auto mt-12 px-6">
-        <h1 className="text-3xl font-bold mb-4">Quiz ID: {id}</h1>
-        <p className="text-gray-400 mb-4">Time Left: {timeLeft}s</p>
+        <h1 className="text-3xl font-bold mb-4">{quiz.title}</h1>
+        <p className="text-gray-400 mb-4">
+          Question {currentIndex + 1} of {quiz.questions.length} |{" "}
+          {quiz.difficulty}
+        </p>
 
         <div className="bg-[#161b22] p-6 rounded-2xl shadow-lg">
           <h2 className="text-xl font-semibold mb-4">
@@ -102,19 +116,14 @@ const QuizPage = () => {
               <button
                 key={idx}
                 onClick={() => handleAnswer(option)}
-                className="w-full p-3 bg-cyan-700 hover:bg-cyan-600 rounded-lg transition-colors"
+                disabled={submitting}
+                className="w-full p-3 bg-cyan-700 hover:bg-cyan-600 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {option}
               </button>
             ))}
           </div>
         </div>
-
-        {error && (
-          <p className="text-red-500 mt-4 text-sm">
-            Failed to fetch online questions. Using fallback questions.
-          </p>
-        )}
       </div>
 
       <Footer />

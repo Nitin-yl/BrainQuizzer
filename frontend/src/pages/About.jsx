@@ -31,9 +31,7 @@ const About = () => {
             />
           </div>
         </div>
-
         <div className="border border-white w-full max-w-6xl rounded-lg text-white flex flex-col md:flex-row h-auto md:h-96 overflow-hidden">
-          {/* Image */}
           <div className="flex-1">
             <img
               src={pic2}
@@ -67,15 +65,13 @@ const About = () => {
               </li>
             </ul>
             <p className="text-lg leading-8 mt-4">
-              At BrainQuizzer, we offer quizzes in multiple subjects with varying
-              difficulty levels, from beginner to expert. Work on your skills,
-              check the leaderboard, and challenge yourself daily!
+              At BrainQuizzer, we offer quizzes in multiple subjects with
+              varying difficulty levels, from beginner to expert. Work on your
+              skills, check the leaderboard, and challenge yourself daily!
             </p>
           </div>
         </div>
-
         <div className="border border-white w-full max-w-6xl rounded-lg text-white flex flex-col md:flex-row h-auto md:h-96 overflow-hidden">
-          {/* Text */}
           <div className="flex-1 p-8 flex flex-col justify-center">
             <h1 className="text-4xl font-bold mb-4">Who It's For</h1>
             <p className="text-lg leading-8 mb-4">
@@ -99,16 +95,18 @@ const About = () => {
             />
           </div>
         </div>
-\
-        <div className="border border-white w-full max-w-6xl rounded-lg text-white p-10 text-center mt-10 
-          transition-transform transform hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/20">
+        \
+        <div
+          className="border border-white w-full max-w-6xl rounded-lg text-white p-10 text-center mt-10 
+          transition-transform transform hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/20"
+        >
           <h2 className="text-3xl font-bold mb-4">Our Mission</h2>
           <p className="text-lg text-gray-300 leading-8">
             To make learning engaging, competitive, and rewarding by turning
             knowledge into a game that anyone can play, anytime, anywhere.
           </p>
         </div>
-\
+        \
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl w-full mt-10">
           {[
             {
@@ -138,9 +136,10 @@ const About = () => {
             </div>
           ))}
         </div>
-
-        <div className="w-full max-w-6xl mt-12 bg-gradient-to-r from-cyan-700 to-cyan-500 
-          rounded-xl p-10 text-center text-white transition hover:shadow-2xl hover:shadow-cyan-400/40 hover:scale-105">
+        <div
+          className="w-full max-w-6xl mt-12 bg-gradient-to-r from-cyan-700 to-cyan-500 
+          rounded-xl p-10 text-center text-white transition hover:shadow-2xl hover:shadow-cyan-400/40 hover:scale-105"
+        >
           <h2 className="text-3xl font-bold mb-3">
             Ready to Become a Quiz Champion?
           </h2>

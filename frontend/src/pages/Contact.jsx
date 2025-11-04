@@ -19,7 +19,6 @@ const Contact = () => {
     e.preventDefault();
     setSubmitted(true);
 
-
     setFormData({
       name: "",
       email: "",
@@ -31,9 +30,18 @@ const Contact = () => {
   };
 
   const faqs = [
-    { q: "How do I start a quiz?", a: "Just go to the Quizzes page, choose one, and click Start." },
-    { q: "Can I retake quizzes?", a: "Yes! You can retake quizzes as many times as you like." },
-    { q: "How is scoring calculated?", a: "Scores depend on accuracy, speed, and difficulty level." },
+    {
+      q: "How do I start a quiz?",
+      a: "Just go to the Quizzes page, choose one, and click Start.",
+    },
+    {
+      q: "Can I retake quizzes?",
+      a: "Yes! You can retake quizzes as many times as you like.",
+    },
+    {
+      q: "How is scoring calculated?",
+      a: "Scores depend on accuracy, speed, and difficulty level.",
+    },
   ];
 
   return (
@@ -48,7 +56,6 @@ const Contact = () => {
       </div>
 
       <div className="max-w-6xl mx-auto mt-12 grid grid-cols-1 lg:grid-cols-2 gap-10 px-6">
-
         <div className="bg-[#161b22] p-6 rounded-2xl shadow-lg">
           <h2 className="text-2xl font-bold mb-4">Send a Message</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -99,11 +106,10 @@ const Contact = () => {
           </form>
           {submitted && (
             <p className="mt-3 text-green-400 font-medium text-center">
-               Message Sent Successfully!
+              Message Sent Successfully!
             </p>
           )}
         </div>
-
 
         <div>
           <div className="bg-[#161b22] p-6 rounded-2xl shadow-lg mb-6">
@@ -125,7 +131,6 @@ const Contact = () => {
         </div>
       </div>
 
-
       <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6 text-center mt-16 px-6">
         <div className="bg-[#161b22] p-6 rounded-xl">
           <h2 className="text-3xl font-bold text-cyan-400">5000+</h2>
@@ -140,7 +145,6 @@ const Contact = () => {
           <p className="text-gray-400">Countries Reached</p>
         </div>
       </div>
-
 
       <div className="max-w-3xl mx-auto bg-[#161b22] p-8 mt-16 rounded-2xl text-center">
         <h2 className="text-2xl font-bold mb-3">Subscribe to our Newsletter</h2>

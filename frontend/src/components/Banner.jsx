@@ -5,13 +5,13 @@ import { motion } from "framer-motion";
 const Banner = () => {
   return (
     <div className="w-full bg-[#0d1117] pt-5 md:pt-7 px-4 sm:px-8 md:px-16 lg:px-32">
-      <div className="flex flex-col md:flex-row items-center md:items-start gap-10 md:gap-16">
+      <div className="flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-12 lg:gap-16">
  
         <div className="flex-shrink-0 w-full md:w-1/2">
           <img
             src={heroImg}
             alt="Hero Banner"
-            className="h-[400px] md:h-[600px] w-full object-cover rounded-xl opacity-75"
+            className="h-[360px] md:h-[480px] lg:h-[600px] w-full object-cover rounded-xl opacity-75"
           />
         </div>
 

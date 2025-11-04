@@ -22,23 +22,23 @@ const Navbar = () => {
     <header className="bg-[#0d1117]">
       <section className="h-16 flex items-center justify-between px-6 md:px-12">
    
-        <NavLink to="/" className="flex items-center gap-2 md:ml-20">
-          <div className="relative w-12 h-12">
+        <NavLink to="/" className="flex items-center gap-2 lg:ml-20">
+          <div className="relative w-10 h-10 md:w-12 md:h-12">
             <MessageCircle
               className="w-full h-full text-[#21c8d4]"
               strokeWidth={2}
             />
-            <span className="absolute inset-0 flex items-center justify-center font-bold text-white text-2xl">
+            <span className="absolute inset-0 flex items-center justify-center font-bold text-white text-xl md:text-2xl">
               ?
             </span>
           </div>
-          <span className="text-xl font-bold text-white">
+          <span className="text-lg md:text-xl font-bold text-white">
             <span className="text-[#21c8d4]">Brain</span>Quizzer
           </span>
         </NavLink>
 
         <nav className="hidden md:flex">
-          <ul className="flex gap-8 text-xl font-medium text-white">
+          <ul className="flex gap-6 lg:gap-8 text-lg lg:text-xl font-medium text-white">
             {links.map((link) => (
               <NavLink
                 key={link.path}
@@ -52,7 +52,7 @@ const Navbar = () => {
         </nav>
 
 
-        <div className="hidden md:flex items-center gap-6 font-bold md:mr-20">
+        <div className="hidden md:flex items-center gap-4 lg:gap-6 font-bold lg:mr-20">
           <SignedIn>
             <NavLink
               to="/profile"
